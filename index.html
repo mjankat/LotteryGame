@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sayısal Loto Oyunu</title>
+    <style>
+        input{
+            width: 60px;
+        }
+        .container{
+            width: 80%;
+            padding: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Sayısal Loto Oyunu</h2>
+        <p>Aşağıdaki inputlara tahminleri giriniz;</p>
+        <form>
+            <input type="number" id="tahmin1" min="1" max="49" oninput="tahminKontrol(this)">
+            <input type="number" id="tahmin2" min="1" max="49" oninput="tahminKontrol(this)">
+            <input type="number" id="tahmin3" min="1" max="49" oninput="tahminKontrol(this)">
+            <input type="number" id="tahmin4" min="1" max="49" oninput="tahminKontrol(this)">
+            <input type="number" id="tahmin5" min="1" max="49" oninput="tahminKontrol(this)">
+            <input type="number" id="tahmin6" min="1" max="49" oninput="tahminKontrol(this)">
+            <button id="tahminButton" onclick="tahminGir()">Tahmin Gir</button><br><br>
+        </form>
+            
+        
+        <div id="tahminMesaj"></div>
+        <hr>
+
+        <button id="kurayiCek" onclick="kurayiCek()" disabled>Kurayı Çek</button><br>
+
+        <p>Loto Sayıları</p>
+        <div id="lotoInputs">
+            <input type="text" id="lotosayi1" disabled>
+            <input type="text" id="lotosayi2" disabled>
+            <input type="text" id="lotosayi3" disabled>
+            <input type="text" id="lotosayi4" disabled>
+            <input type="text" id="lotosayi5" disabled>
+            <input type="text" id="lotosayi6" disabled>
+        </div>
+        <br>
+        <span id="bilinenSayilar"></span>
+        <br>
+        <span id="bilinenSayiAdet"></span>
+    </div>
+
+   
+
+<script>
+
+    let tahminDizi = []; 
+    let tahminDiziKontrol = []; 
+    const lotoSayilari = [];
+
+    function tahminKontrol(input) {
+            
+            const tahmin = parseInt(input.value);
+
+            if (tahmin < 1 || tahmin > 49 || isNaN(tahmin)) {
+                alert("Geçersiz değer. 1 ile 49 arasında bir sayı giriniz.");
+                input.value = "";
+                return;
+            }
+
+            if (tahminDizi.includes(tahmin)) {
+                alert("Aynı sayıyı tekrar giremezsiniz.");
+                input.value = "";
+                return;
+            }
+
+            tahminDizi[input.id.slice(-1) - 1] = tahmin;
+        }
+
+    function tahminGir() {
+
+        for (let i = 1; i <= 6; i++) {
+                const inputElement = document.getElementById("tahmin" + i);
+                const number = parseInt(inputElement.value);
+                tahminDiziKontrol.push(number);
+            }
+
+            tahminDiziKontrol.sort();
+
+            for (let i = 0; i < tahminDiziKontrol.length; i++) {
+                
+                document.getElementById("tahmin" + (i + 1)).value = tahminDiziKontrol[i];
+            }
+
+        document.getElementById("tahminMesaj").innerHTML = "Tahminler girildi.";
+        document.getElementById("tahminButton").disabled = true;
+        document.getElementById("kurayiCek").disabled = false;
+    }
+
+    function kurayiCek() {
+        
+        
+        while (lotoSayilari.length < 6) {
+            const randomSayi = Math.floor(Math.random() * 49) + 1;
+            if (!lotoSayilari.includes(randomSayi)) {
+                lotoSayilari.push(randomSayi);
+            }
+        }
+        for (let i = 0; i < 6; i++) {
+            parseInt(lotoSayilari[i]);
+        }
+        lotoSayilari.sort((a, b) => a - b);
+
+        
+        for (let i = 0; i < 6; i++) {
+            document.getElementById("lotosayi" + (i + 1)).value = lotoSayilari[i];
+        }
+
+        bilinenSayilarYazdir();
+
+    }
+
+    
+
+
+    function bilinenSayilarYazdir() {
+        const ortakElemanlar = tahminDiziKontrol.filter(sayi => lotoSayilari.includes(parseInt(sayi)));
+        
+        document.getElementById("bilinenSayilar").innerHTML = "Bilinen Sayılar: " + ortakElemanlar.join(", ");
+        document.getElementById("bilinenSayiAdet").innerHTML = ortakElemanlar.length + " adet sayı bildiniz.";      
+    }
+
+   
+    
+
+</script>
+
+</body>
+</html>
+
+
+</body>
+</html>
